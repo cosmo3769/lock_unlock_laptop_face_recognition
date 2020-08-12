@@ -12,29 +12,29 @@ def assure_path_exists(path):
     if not os.path.exists(dir):
         os.makedirs(dir)
         
-counter_correct = 0  #counter variable to count number of times loop runs
+counter_correct = 0  
 counter_wrong = 0
 
-now = datetime.datetime.now()  #extract current time     
-now = now.second        #we need only seconds
+now = datetime.datetime.now()     
+now = now.second        
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 
 assure_path_exists("trainer/")
 
-recognizer.read('trainer/trainer.yml')  #load training model
+recognizer.read('trainer/trainer.yml') 
 
-cascadePath = "haarcascade_frontalface_default.xml"  #cascade path
+cascadePath = "haarcascade_frontalface_default.xml" 
 
-faceCascade = cv2.CascadeClassifier(cascadePath);  #load cascade
+faceCascade = cv2.CascadeClassifier(cascadePath);  
 
-font = cv2.FONT_HERSHEY_COMPLEX_SMALL  # Set the font style
+font = cv2.FONT_HERSHEY_COMPLEX_SMALL  
 
 cam = cv2.VideoCapture(0)
 
 while True:
     
-    now1 = datetime.datetime.now()          #program will lock station after 5 seconds if it doesn't see any faces.
+    now1 = datetime.datetime.now()        
     now1 = now1.second
     if(now1 > now + 8):
         cam.release()
@@ -52,12 +52,11 @@ while True:
 
         cv2.rectangle(im, (x-20,y-20), (x+w+20,y+h+20), (0,255,0), 4)       
 
-        Id, confidence = recognizer.predict(gray[y:y+h,x:x+w])   # Recognize the face belongs to which ID
+        Id, confidence = recognizer.predict(gray[y:y+h,x:x+w])  
 
-        #if(Id == 1):    # Check the ID if exist 
-         #   Id = "{0:.2f}%".format(round(100 - confidence, 2)) 
+    
  
-        if(confidence>80):                 #confidence usually comes greater than 80 for strangers
+        if(confidence>80):             
             counter_wrong += 1
             print("Wrong")
             Id = "Unknown + {0:.2f}%".format(round(100 - confidence, 2)) 
@@ -65,7 +64,7 @@ while True:
             print("counter_wrong - " + str(counter_wrong))
             cv2.rectangle(im, (x-22,y-90), (x+w+22, y-22), (0,0,255), -1)
             cv2.putText(im, str(Id), (x,y-40), font, 1, (0,0,0), 2)
-        else:                              #confidence usually comes less than 80 for correct user(s)
+        else:                         
             Id = "Piyush + {0:.2f}%".format(round(100 - confidence, 2)) 
             print("Verified")
             print(confidence)
@@ -83,14 +82,14 @@ while True:
             ctypes.windll.user32.LockWorkStation()
             sys.exit()
 
-        if(counter_correct == 6):    #if counter = 6 then program will terminate as it has recognized correct user for 6 times. 
+        if(counter_correct == 6):   
             cam.release()
             cv2.destroyAllWindows()
             sys.exit()
 
     cv2.imshow('Webcam',im) 
 
-    if cv2.waitKey(10) & 0xFF == ord('*'):      # If '*' is pressed, terminate the  program
+    if cv2.waitKey(10) & 0xFF == ord('*'):    
         break
 
 cam.release()
