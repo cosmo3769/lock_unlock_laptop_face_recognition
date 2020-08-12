@@ -1,0 +1,1 @@
+"C:\Users\PIYUSH\Anaconda3\python.exe" "E:\projects\ML\apps\lock_unlock_laptop_face_recognition\face_recognition.py" %*
